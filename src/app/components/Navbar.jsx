@@ -1,9 +1,18 @@
+'use client'
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-
+import { authClient } from '../lib/auth-client';
+import {Avatar, Button} from "@heroui/react";
 
 const Navbar = () => {
+    const { 
+        data: session, 
+    } = authClient.useSession() 
+    
+    const user = session?.user
+    console.log(user)
+
     return (
         <nav className='flex justify-between bg-white p-3 items-center text-center'>
             <ul className='flex gap-5 text-base font-medium'>
@@ -23,10 +32,25 @@ const Navbar = () => {
                 /> 
             </div>
             
-            <ul className='flex gap-5 text-base font-medium'>
+            <ul className='flex items-center gap-5 text-base font-medium'>
                 <li><Link href={'/profile'}>Profile</Link></li>
+                {user? <>
+                <li>
+                    <Avatar size="lg">
+            <Avatar.Image
+            alt="Large Avatar"
+            src={user?.image}
+            />
+            <Avatar.Fallback>{user.name.charAt(0)}</Avatar.Fallback>
+        </Avatar>
+                </li>
+                <li>
+                    <Button variant='danger' className={'rounded-none'}>Logout</Button>
+                </li>
+                </>: <>
                 <li><Link href={'/auth/login'}>Login</Link></li>
                 <li><Link href={'/auth/signup'}>SignUp</Link></li>
+                </>}
             </ul>
         </nav>
     );

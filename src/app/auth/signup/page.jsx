@@ -21,7 +21,6 @@ const SignUp = () => {
             image:user.image
             
         })
-        
         if (data){
             redirect('/')
         }
@@ -99,7 +98,7 @@ const SignUp = () => {
         </TextField>
         <div className="flex gap-2 justify-center ">
             <Button className={'bg-cyan-500 w-full rounded-none text-center'} type="submit">
-            Submit
+            Create Account
             </Button>
             
         </div>
