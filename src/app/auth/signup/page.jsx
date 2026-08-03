@@ -5,6 +5,8 @@ import {Button, Description, FieldError, Form, Input, Label, TextField} from "@h
 import { authClient } from "@/app/lib/auth-client";
 import { redirect } from 'next/navigation';
 import { CiUser } from 'react-icons/ci';
+import { FaGoogle } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 
 const SignUp = () => {
@@ -29,8 +31,14 @@ const SignUp = () => {
         // Show message to the user
         alert(error.message || "Failed to sign up"); 
 }
+        
 
     }
+    const handleGoogleSignin = async() =>{
+                await authClient.signIn.social({
+                    provider:"google"
+                })
+            }
     return (
         <div className='mx-auto mt-15 mb-10 max-w-7xl'>
             <Card className='border rounded-none'>
@@ -103,6 +111,13 @@ const SignUp = () => {
             
         </div>
                 </Form>
+                <div>
+                    <p className='text-center mt-2 mb-2'>Or Signup with</p>
+                </div>
+                <div className='items-center flex'>
+                    <Button onClick={handleGoogleSignin} variant='tertiary' className={'w-full rounded-none mx-auto items-center text-base'}> <FcGoogle className='text-base' />Signup with GOOGLE</Button>
+                
+                </div>
             </Card>
         </div>
     );
