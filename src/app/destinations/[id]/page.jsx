@@ -1,16 +1,30 @@
 import { DeleteDialogue } from '@/app/components/DeleteDialogue';
 import { EditModal } from '@/app/components/EditModal';
+import { BookingCard } from '@/app/components/BookingCard';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { FiArrowLeft, FiEdit, FiTrash2, FiMapPin, FiStar, FiCalendar, FiCheck, FiArrowRight } from 'react-icons/fi';
+import { FiArrowLeft, FiMapPin, FiStar, FiCalendar, FiCheck } from 'react-icons/fi';
+import { auth } from '@/app/lib/auth';
+import { headers } from 'next/headers';
 
 const DestinationDetailsPage = async ({ params }) => {
     const { id } = await params;
-    const res = await fetch(`http://localhost:7000/destination/${id}`, { cache: 'no-store' });
+    const {token} = await auth.api.getToken({
+        headers:await headers()
+    })
+    const res = await fetch(`http://localhost:7000/destination/${id}`, { 
+        headers:{
+            authorization:`Bearer ${token}`
+        }
+    });
     const destination = await res.json();
     
-    const { destinationName, country, category, price, duration, date, imageUrl, description, _id } = destination;
+    if (!destination) {
+        return <div className="max-w-6xl mx-auto px-4 py-20 text-center text-slate-500">Destination not found.</div>;
+    }
+
+    const { destinationName, country, duration, imageUrl, description } = destination;
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-6 text-slate-800">
@@ -20,10 +34,8 @@ const DestinationDetailsPage = async ({ params }) => {
                     <FiArrowLeft /> Back to Destinations
                 </Link>
                 <div className="flex items-center gap-3">
-                    {/* Edit button */}
-                    <EditModal destination={destination}></EditModal>
-                    {/* Delete button */}
-                    <DeleteDialogue destination={destination}></DeleteDialogue>
+                    <EditModal destination={destination} />
+                    <DeleteDialogue destination={destination} />
                 </div>
             </div>
 
@@ -104,42 +116,7 @@ const DestinationDetailsPage = async ({ params }) => {
                 </div>
 
                 {/* Right Column (Booking Card Sidebar) */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-md space-y-6 sticky top-6">
-                    <div>
-                        <span className="text-xs text-slate-400 font-medium block mb-1">Starting from</span>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-extrabold text-[#11A4C4]">${price}</span>
-                        </div>
-                        <span className="text-xs text-slate-400 font-normal">per person</span>
-                    </div>
-
-                    {/* Date Input Display */}
-                    <div className="bg-slate-50 rounded-lg p-3 text-sm text-slate-700 border border-slate-100 font-medium">
-                        {date || '05/15/2026'}
-                    </div>
-
-                    {/* Action Button */}
-                    <button className="w-full py-3 px-4 bg-[#11A4C4] hover:bg-[#0e8da9] text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 text-sm cursor-pointer">
-                        <span>Book Now</span>
-                        <FiArrowRight />
-                    </button>
-
-                    {/* Benefits List */}
-                    <div className="space-y-2.5 pt-2 border-t border-slate-100 text-xs text-slate-500">
-                        <div className="flex items-center gap-2">
-                            <FiCheck className="text-emerald-500" />
-                            <span>Free cancellation up to 7 days</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <FiCheck className="text-emerald-500" />
-                            <span>Travel insurance included</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <FiCheck className="text-emerald-500" />
-                            <span>24/7 customer support</span>
-                        </div>
-                    </div>
-                </div>
+                <BookingCard destination={destination} />
             </div>
         </div>
     );

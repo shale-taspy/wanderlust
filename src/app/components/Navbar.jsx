@@ -11,7 +11,6 @@ const Navbar = () => {
     } = authClient.useSession() 
     
     const user = session?.user
-    console.log(user)
 
     const handleSignOut= async()=>{
         await authClient.signOut();
@@ -40,7 +39,7 @@ const Navbar = () => {
                 <li><Link href={'/profile'}>Profile</Link></li>
                 {user? <>
                 <li>
-                    <Avatar size="lg">
+                    <Avatar size="md">
             <Avatar.Image
             referrerPolicy='no-referrer'
             alt="Large Avatar"
