@@ -27,14 +27,19 @@ export const BookingCard = ({ destination }) => {
             country,
             departureDate: departureDate ? new Date(departureDate) : null,
         };
-
-            const res = await fetch(`http://localhost:7000/booking`,{
-            method:"POST",
-            headers:{
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
-        })
+        //Token Verification in client component
+            const {data:tokenData} = await authClient.token()
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_SERVER_URL}/booking`,
+              {
+                method: "POST",
+                headers: {
+                  "content-type": "application/json",
+                  authorization: `Bearer ${tokenData?.token}`,
+                },
+                body: JSON.stringify(bookingData),
+              },
+            );
         const data = await res.json()
         toast.success("You booked successfully", {
                         position: "bottom-right"

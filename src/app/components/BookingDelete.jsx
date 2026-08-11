@@ -6,12 +6,15 @@ import { FaTrashCan } from 'react-icons/fa6';
 export function BookingDelete({bookingId}) {
   //Cancel the booking function
   const handleCancelBooking = async()=>{
-    const res = await fetch(`http://localhost:7000/booking/${bookingId}`, {
-      method:'DELETE',
-      headers:{
-        'content-type':'application/json'
-      }
-    })
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${bookingId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+        },
+      },
+    );
     const data = await res.json()
     window.location.reload()
      toast.danger("Booking Canceled")
