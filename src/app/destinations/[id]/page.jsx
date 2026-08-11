@@ -24,14 +24,14 @@
     const token = tokenData?.token;
 
     // 2. Pass Token in Authorization Header
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/destination/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL ||
+      "https://wanderlust-server-sage-six.vercel.app";
+   const res = await fetch(`${baseUrl}/destination`, {
+     headers: {
+       Authorization: `Bearer ${token}`,
+     },
+   });
 
     if (!res.ok) {
         return (
